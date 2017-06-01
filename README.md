@@ -62,8 +62,8 @@ $cards = (new CardFactory)->createArray($spec);
 $cards[] = new FlightCard('Kiev', 'Madrid', 'KV333', '12', '14B', '77');
 shuffle($cards);
 $trip = (new TripBuilder)->build($cards);
-foreach ($trip->iterator() as $leg) {
-    echo new DummyDecorator($leg) . PHP_EOL; // Decorator pattern demo
+foreach ($trip->iterator() as $card) {
+    echo new DummyDecorator($card) . PHP_EOL; // Decorator pattern demo
 }
 echo 'You have arrived at your final destination.';
 
