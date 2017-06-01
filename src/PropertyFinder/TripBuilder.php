@@ -26,7 +26,7 @@ class TripBuilder
             $sources[$card->getSource()] = $card;
             $destinations[$card->getDestination()] = $card;
         }
-        $leg = null;
+        $start = null;
         /** @var Card $card */
         foreach ($sources as $source => $card) {
             $dst = $card->getDestination();
@@ -34,12 +34,12 @@ class TripBuilder
                 $card->setNext($sources[$dst]);
             }
             if (empty($destinations[$source])) { // starting point
-                $leg = $card;
+                $start = $card;
             }
         }
-        if ($leg === null) {
+        if ($start === null) {
             throw new RoundTripException;
         }
-        return $leg;
+        return $start;
     }
 }
