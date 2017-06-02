@@ -2,6 +2,7 @@
 
 namespace PropertyFinder;
 
+use PropertyFinder\Exception\BrokenChainException;
 use PropertyFinder\Exception\RoundTripException;
 use PropertyFinder\Exception\TripBuilderException;
 
@@ -34,6 +35,9 @@ class TripBuilder
                 $card->setNext($sources[$dst]);
             }
             if (empty($destinations[$source])) { // starting point
+                if (null !== $start) {
+                    throw new BrokenChainException;
+                }
                 $start = $card;
             }
         }

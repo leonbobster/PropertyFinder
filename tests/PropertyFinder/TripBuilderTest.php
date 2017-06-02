@@ -46,6 +46,19 @@ class TripBuilderTest extends CardTestCase
     }
 
     /**
+     * @test
+     * @expectedException \PropertyFinder\Exception\BrokenChainException
+     */
+    public function build_should_throw_broken_chain_exception()
+    {
+        $this->builder->build([
+            $this->createCard(1, 2),
+            $this->createCard(2, 3),
+            $this->createCard(5, 6)
+        ]);
+    }
+
+    /**
      * @param int $n Number of legs.
      *
      * @return Card[]
