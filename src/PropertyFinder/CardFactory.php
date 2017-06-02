@@ -47,9 +47,7 @@ class CardFactory
      */
     public function createArray(array $spec): array
     {
-        return array_map(function (array $spec) {
-            return $this->createCard($spec);
-        }, $spec);
+        return array_map([$this, 'createCard'], $spec);
     }
 
     /**
