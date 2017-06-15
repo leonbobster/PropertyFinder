@@ -20,61 +20,30 @@ php index.php
 
 ### Usage example:
 ```php
-$spec = [
-    [
-        TrainCard::class => [
-            'source'      => 'Madrid',
-            'destination' => 'Barcelona',
-            'number'      => '78A',
-            'seat'        => '45B'
-        ]
-    ],
-    [
-        AirportBusCard::class => [
-            'source'      => 'Barcelona',
-            'destination' => 'Gerona Airport'
-        ]
-    ],
-    [
-        FlightCard::class => [
-            'source'        => 'Gerona Airport',
-            'destination'   => 'Stockholm',
-            'number'        => 'SK455',
-            'gate'          => '45B',
-            'seat'          => '3A',
-            'ticketCounter' => '344'
-        ]
-    ],
-    [
-        FlightCard::class => [
-            'source'        => 'Stockholm',
-            'destination'   => 'Berlin',
-            'number'        => 'B323',
-            'gate'          => '12C',
-            'seat'          => '12A',
-            'ticketCounter' => '567'
-        ]
-    ]
+$cards = [
+    new TrainCard('Madrid', 'Barcelona', '78A', '45B'),
+    new AirportBusCard('Barcelona', 'Gerona Airport'),
+    new FlightCard('Gerona Airport', 'Stockholm', 'SK455', '45B', '3A', '344'),
+    new FlightCard('Stockholm', 'Berlin', 'B323', '12C', '12A', '567'),
+    new FlightCard('Kiev', 'Madrid', 'KV333', '12', '14B', '77')
 ];
-// you can create tickets from a spec array
-$cards = (new CardFactory)->createArray($spec);
-// or instantiate directly whenever you want
-$cards[] = new FlightCard('Kiev', 'Madrid', 'KV333', '12', '14B', '77');
+
 shuffle($cards);
-$trip = (new TripBuilder)->build($cards);
-foreach ($trip->iterator() as $card) {
-    echo new DummyDecorator($card) . PHP_EOL; // Decorator pattern demo
+
+foreach ((new TripBuilder)->build($cards)->iterator() as $card) {
+    echo $card . PHP_EOL;
 }
 echo 'You have arrived at your final destination.';
 
+
 /*
--> From Kiev, take flight KV333 to Madrid. Gate 12, seat 14B.
+From Kiev, take flight KV333 to Madrid. Gate 12, seat 14B.
 Baggage drop at ticket counter 77.
--> Take train 78A from Madrid to Barcelona. Sit in seat 45B.
--> Take the airport bus from Barcelona to Gerona Airport. No seat assignment.
--> From Gerona Airport, take flight SK455 to Stockholm. Gate 45B, seat 3A.
+Take train 78A from Madrid to Barcelona. Sit in seat 45B.
+Take the airport bus from Barcelona to Gerona Airport. No seat assignment.
+From Gerona Airport, take flight SK455 to Stockholm. Gate 45B, seat 3A.
 Baggage drop at ticket counter 344.
--> From Stockholm, take flight B323 to Berlin. Gate 12C, seat 12A.
+From Stockholm, take flight B323 to Berlin. Gate 12C, seat 12A.
 Baggage drop at ticket counter 567.
 You have arrived at your final destination.
 */
