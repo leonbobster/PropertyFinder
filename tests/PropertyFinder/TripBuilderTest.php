@@ -29,11 +29,11 @@ class TripBuilderTest extends TestCase
             return $card->__toString();
         };
         $strings = array_map($cardToString, $cards);
-        $iterator = iterator_to_array((new TripBuilder)->build($cards)->iterator());
         shuffle($cards);
+        $sorted = iterator_to_array((new TripBuilder)->build($cards)->iterator());
         $this->assertEquals(
             $strings,
-            array_map($cardToString, $iterator)
+            array_map($cardToString, $sorted)
         );
     }
 }
