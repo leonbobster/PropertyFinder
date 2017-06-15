@@ -2,7 +2,11 @@
 
 namespace tests\PropertyFinder;
 
+use PHPUnit\Framework\TestCase;
+use PropertyFinder\AirportBusCard;
 use PropertyFinder\Card;
+use PropertyFinder\FlightCard;
+use PropertyFinder\TrainCard;
 use PropertyFinder\TripBuilder;
 
 /**
@@ -10,63 +14,26 @@ use PropertyFinder\TripBuilder;
  *
  * @package tests\PropertyFinder
  */
-class TripBuilderTest extends CardTestCase
+class TripBuilderTest extends TestCase
 {
-    /** @var TripBuilder */
-    protected $builder;
-
-    public function setUp()
+    public function test_build()
     {
-        parent::setUp();
-        $this->builder = new TripBuilder;
-    }
-
-    /** @test */
-    public function build_should_create_continuous_trip()
-    {
-        $cards = $this->createTrip(5);
+        $cards = [
+            new FlightCard('Kiev', 'Madrid', 'KV333', '12', '14B', '77'),
+            new TrainCard('Madrid', 'Barcelona', '78A', '45B'),
+            new AirportBusCard('Barcelona', 'Gerona Airport'),
+            new FlightCard('Gerona Airport', 'Stockholm', 'SK455', '45B', '3A', '344'),
+            new FlightCard('Stockholm', 'Berlin', 'B323', '12C', '12A', '567')
+        ];
+        $cardToString = function (Card $card): string {
+            return $card->__toString();
+        };
+        $strings = array_map($cardToString, $cards);
+        $iterator = iterator_to_array((new TripBuilder)->build($cards)->iterator());
         shuffle($cards);
-
         $this->assertEquals(
-            [1, 2, 3, 4, 5, 6],
-            iterator_to_array($this->builder->build($cards)->toRoute())
+            $strings,
+            array_map($cardToString, $iterator)
         );
-    }
-
-    /**
-     * @test
-     * @expectedException \PropertyFinder\Exception\RoundTripException
-     */
-    public function build_should_throw_round_trip_exception()
-    {
-        $this->builder->build([
-            $this->createCard(1, 2),
-            $this->createCard(2, 1)
-        ]);
-    }
-
-    /**
-     * @test
-     * @expectedException \PropertyFinder\Exception\BrokenChainException
-     */
-    public function build_should_throw_broken_chain_exception()
-    {
-        $this->builder->build([
-            $this->createCard(1, 2),
-            $this->createCard(2, 3),
-            $this->createCard(5, 6)
-        ]);
-    }
-
-    /**
-     * @param int $n Number of legs.
-     *
-     * @return Card[]
-     */
-    protected function createTrip($n): array
-    {
-        return array_map(function ($i) {
-            return $this->createCard($i, $i + 1);
-        }, range(1, $n));
     }
 }

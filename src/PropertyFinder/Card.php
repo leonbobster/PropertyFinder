@@ -7,7 +7,7 @@ use Iterator;
 /**
  * Class Card
  */
-abstract class Card implements StringifiableInterface
+abstract class Card
 {
     /** @var string */
     protected $source;
@@ -129,19 +129,5 @@ abstract class Card implements StringifiableInterface
             }
 
         };
-    }
-
-    /**
-     * @return Iterator
-     */
-    public function toRoute(): Iterator
-    {
-        /** @var Card $leg */
-        foreach ($this->iterator() as $i => $leg) {
-            if ($i === 0) {
-                yield $leg->getSource();
-            }
-            yield $leg->getDestination();
-        }
     }
 }
